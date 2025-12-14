@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Te Amo Harumi</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+    body {
+        margin: 0;
+        background: black;
+        overflow: hidden;
+        height: 100vh;
+        font-family: cursive;
+    }
+
+    .center {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 4rem;
+        color: hotpink;
+        text-align: center;
+        text-shadow: 0 0 15px hotpink;
+        animation: beat 0.625s infinite;
+        pointer-events: none;
+    }
+
+    @keyframes beat {
+        0% { transform: translate(-50%, -50%) scale(1); }
+        50% { transform: translate(-50%, -50%) scale(1.18); }
+        100% { transform: translate(-50%, -50%) scale(1); }
+    }
+
+    .falling {
+        position: absolute;
+        color: pink;
+        font-size: 1.4rem;
+        text-shadow: 0 0 10px pink;
+        pointer-events: none;
+        animation: fall linear forwards;
+    }
+
+    @keyframes fall {
+        from { transform: translateY(-50px); opacity: 1; }
+        to { transform: translateY(120vh); opacity: 0; }
+    }
+
+    .tap {
+        position: absolute;
+        color: hotpink;
+        font-size: 1.6rem;
+        text-shadow: 0 0 15px hotpink;
+        pointer-events: none;
+        animation: pop 1.25s forwards;
+    }
+
+    @keyframes pop {
+        0% { transform: scale(0.4); opacity: 1; }
+        100% { transform: scale(2.2); opacity: 0; }
+    }
+</style>
+</head>
+<body>
+
+<div class="center" id="center-text">
+    TE AMO<br>HARUMI
+</div>
+
+<audio id="music" loop>
+    <source src="mevolvioloco.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+const music = document.getElementById("music");
+const center = document.getElementById("center-text");
+
+let musicStarted = false;
+
+// Crear palabras que caen automáticamente
+function createFalling() {
+    const el = document.createElement("div");
+    el.className = "falling";
+    el.innerText = "te amo";
+    el.style.left = Math.random() * window.innerWidth + "px";
+    el.style.fontSize = (1 + Math.random() * 1.5) + "rem";
+    el.style.animationDuration = (2 + Math.random() * 2) + "s";
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 4000);
+}
+
+setInterval(createFalling, 300);
+
+// Crear palabras al tocar
+function createTap(x, y) {
+    for (let i = 0; i < 6; i++) {
+        const t = document.createElement("div");
+        t.className = "tap";
+        t.innerText = "te amo";
+        t.style.left = (x + Math.random() * 50 - 25) + "px";
+        t.style.top = (y + Math.random() * 50 - 25) + "px";
+        document.body.appendChild(t);
+        setTimeout(() => t.remove(), 1500);
+    }
+}
+
+// Iniciar música al primer toque
+function startMusic() {
+    if (!musicStarted) {
+        music.play();
+        musicStarted = true;
+    }
+}
+
+document.addEventListener("click", (e) => {
+    createTap(e.clientX, e.clientY);
+    startMusic();
+});
+
+document.addEventListener("touchstart", (e) => {
+    const t = e.touches[0];
+    createTap(t.clientX, t.clientY);
+    startMusic();
+});
+</script>
+
+</body>
+</html>
